@@ -23,6 +23,7 @@ public class DroneServiceImpl implements DroneService {
     }
 
     @Override
+    @Transactional
     public DroneDto createDrone(DroneDto droneDto) {
         var drone = droneRepository.save(DroneMapper.mapToDrone(droneDto));
         droneDto.setId(drone.getId());
@@ -30,11 +31,13 @@ public class DroneServiceImpl implements DroneService {
     }
 
     @Override
+    @Transactional
     public boolean droneExists(UUID id) {
         return droneRepository.existsById(id);
     }
 
     @Override
+    @Transactional
     public DroneDto loadDroneMedication(UUID droneId, List<MedicationDto> medicationDtos) {
         var medications = medicationDtos.stream()
                 .map(DroneMapper::mapToMedication)
@@ -54,6 +57,7 @@ public class DroneServiceImpl implements DroneService {
     }
 
     @Override
+    @Transactional
     public List<MedicationDto> getDroneMedications(UUID droneId) {
         var drone = droneRepository.findById(droneId);
         return drone.get().getMedications().stream()
@@ -62,6 +66,7 @@ public class DroneServiceImpl implements DroneService {
     }
 
     @Override
+    @Transactional
     public List<DroneDto> filterDrones(List<DroneState> droneStates) {
         return droneRepository.findByStateIn(droneStates).stream()
                 .map(DroneMapper::mapToDroneDto)
@@ -69,6 +74,7 @@ public class DroneServiceImpl implements DroneService {
     }
 
     @Override
+    @Transactional
     public DroneDto getDroneById(UUID droneId) {
         return DroneMapper.mapToDroneDto(droneRepository.findById(droneId).get());
     }
