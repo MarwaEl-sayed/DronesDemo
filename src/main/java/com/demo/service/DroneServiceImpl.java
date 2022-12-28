@@ -7,7 +7,9 @@ import com.demo.web.Exception.ApiBadRequestException;
 import com.demo.web.data.DroneDto;
 import com.demo.web.data.DroneMapper;
 import com.demo.web.data.MedicationDto;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Set;
@@ -16,6 +18,7 @@ import java.util.stream.Collectors;
 
 @Service
 public class DroneServiceImpl implements DroneService {
+    @Autowired
     final DroneRepository droneRepository;
 
     public DroneServiceImpl(DroneRepository droneRepository) {
@@ -23,10 +26,10 @@ public class DroneServiceImpl implements DroneService {
     }
 
     @Override
-    @Transactional
+    @Transactional(readOnly = true)
     public DroneDto createDrone(DroneDto droneDto) {
         var drone = droneRepository.save(DroneMapper.mapToDrone(droneDto));
-        droneDto.setId(drone.getId());
+        droneDto = DroneMapper.mapToDroneDto(drone);
         return droneDto;
     }
 
